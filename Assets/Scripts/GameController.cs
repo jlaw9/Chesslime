@@ -6,8 +6,8 @@ using System;
 
 public class GameController: MonoBehaviour {
 
-    int masterRows = 4;  // number of rows in the master matrix
-    int masterCols = 5;  // number of columns in the master matrix
+    int masterRows = 7;  // number of rows in the master matrix
+    int masterCols = 7;  // number of columns in the master matrix
     int totalSquare;
     // matrix of pointers to the game board squares list
     // c# doesn't use pointers, so this is the next best thing I think
@@ -19,7 +19,8 @@ public class GameController: MonoBehaviour {
     int currentTurn; //how many turns since the game started.
     int rows;  // number of rows specified by the user
     int cols;  // number of columns specified by the user
-    List<int> players;  // list of players
+    public List<int> players;  // list of players
+    public List<int> prevPlayers;  // list of players
     Dictionary<int, Color32> playerColors = new Dictionary<int, Color32>();  // dictionary of colors for players
 
     public GameObject gameOverPanel;
@@ -363,42 +364,16 @@ public class GameController: MonoBehaviour {
             }
         }
         currentPlayer = prevPlayer;
-        // TODO Undo doesn't work for players being eliminated yet.
-        //players = prevPlayers;
+        players = new List<int>(prevPlayers);
         currentTurn--;
     }
-
-    // copy the slime and player status from list1 to list2
-    public GameSquares[] CopySquareStatus(GameSquares[] list1, GameSquares[] list2)
-    {
-        for (int i = 0; i < list1.Length; i++)
-        {
-            Debug.Log("Setting slime and player of square " + i + " to " + list1[i].current_slime + " " + list1[i].player);
-            list2[i].SetSlime(list1[i].current_slime);
-            list2[i].SetPlayer(list1[i].player);
-        }
-        return list2;
-    }
-
 
     // Next player's turn
     void NextPlayer()
     {
-        // TODO set up to allow more players
-        //currentPlayer = (currentPlayer == 1) ? 2 : 1;
         int curr_player_index = players.IndexOf(currentPlayer);
         int next_player_index = (curr_player_index + 1) % players.Count;
         currentPlayer = players[next_player_index];
-        /*
-        def next_player(self):
-        #print "curr player was:", self.curr_player
-        #next_player_index = ((self.curr_player) % len(self.players))
-        curr_player_index = self.players.index(self.curr_player)
-        next_player_index = (curr_player_index + 1) % len(self.players)
-        self.curr_player = self.players[next_player_index]
-        #print "curr player is:", self.curr_player
-        return self.curr_player
-        */
     }
 
 

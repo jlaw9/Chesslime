@@ -31,6 +31,8 @@ public class GameSquares : MonoBehaviour {
             gameController.prevSquaresList[i][0] = gameController.squaresList[i].player;
             gameController.prevSquaresList[i][1] = gameController.squaresList[i].current_slime;
         }
+        // get the current list of players
+        gameController.prevPlayers = new List<int>(gameController.players);
 
         bool added = AddSlime(takeover:false);
         if (added)
