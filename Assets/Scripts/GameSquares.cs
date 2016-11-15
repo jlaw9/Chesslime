@@ -72,7 +72,8 @@ public class GameSquares : MonoBehaviour {
     {
         this.player = player;
         // set the color of the text to be the player's color.
-        squareText.color = gameController.GetPlayerColor(player);
+        //squareText.color = gameController.GetPlayerColor(player);
+        Square.GetComponent<Image>().sprite = gameController.GetPlayerSlime(player);
     }
 
 

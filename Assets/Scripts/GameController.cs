@@ -21,7 +21,15 @@ public class GameController: MonoBehaviour {
     int cols;  // number of columns specified by the user
     public List<int> players;  // list of players
     public List<int> prevPlayers;  // list of players
+
     Dictionary<int, Color32> playerColors = new Dictionary<int, Color32>();  // dictionary of colors for players
+    Dictionary<int, Sprite> playerSlimeColor = new Dictionary<int, Sprite>();  // dictionary of colors for players
+    public Sprite redSlime;
+    public Sprite blueSlime;
+    public Sprite greenSlime;
+    public Sprite purpleSlime;
+    public Sprite defaultButton;
+
 
     public GameObject gameOverPanel;
     public Text gameOverText;
@@ -39,16 +47,19 @@ public class GameController: MonoBehaviour {
         squaresMatrix = new int[masterRows, masterCols];
         prevSquaresList = new List<List<int>>();
         SetGameControllerReferenceOnButtons();
-        //playerColors[1] = new Color32(255,0,102,100);
-        //playerColors[2] = new Color32(0, 204, 204, 100);
-        //playerColors[3] = new Color32(104, 204, 50, 100);
-        playerColors[0] = new Color32(0, 0, 0, 100);
+        playerColors[0] = new Color32(0, 0, 0, 150);
         playerColors[1] = Color.red;
         playerColors[2] = Color.blue;
         playerColors[3] = Color.green;
         playerColors[4] = Color.magenta;
         playerColors[5] = Color.cyan;
         playerColors[6] = Color.yellow;
+        playerSlimeColor[0] = defaultButton;
+        playerSlimeColor[1] = redSlime;
+        playerSlimeColor[2] = blueSlime;
+        playerSlimeColor[3] = greenSlime;
+        playerSlimeColor[4] = purpleSlime;
+
 
         initializeBoard();
         SelectOptions();
@@ -385,6 +396,11 @@ public class GameController: MonoBehaviour {
     public Color32 GetPlayerColor(int player)
     {
         return playerColors[player];
+    }
+
+    public Sprite GetPlayerSlime(int player)
+    {
+        return playerSlimeColor[player];
     }
 
 }
