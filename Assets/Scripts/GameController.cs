@@ -30,6 +30,11 @@ public class GameController: MonoBehaviour {
     public Sprite purpleSlime;
     public Sprite defaultButton;
 
+    // test animation
+    public Sprite[] greenSlimes;
+    int spriteIndex = 0;
+    int currentIndex = 0;
+    int delay = 5;
 
     public GameObject gameOverPanel;
     public Text gameOverText;
@@ -41,6 +46,16 @@ public class GameController: MonoBehaviour {
     public GameObject gameBoardBackground;
     public GameObject undoButton;
 
+
+    void Update()
+    {
+        spriteIndex++;
+        if (spriteIndex % delay == 0)
+        {
+            currentIndex = (spriteIndex / delay) % greenSlimes.Length;
+            squaresList[0].GetComponent<Image>().sprite = greenSlimes[currentIndex];
+        }
+    }
 
     void Awake()
     {
