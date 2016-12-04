@@ -268,6 +268,7 @@ public class GameController: MonoBehaviour {
                 }
             }
         }
+        //yield;
         return explosion;
     }
 
