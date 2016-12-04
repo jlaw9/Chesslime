@@ -26,6 +26,7 @@ public class GameSquares : MonoBehaviour {
     {
         // get the game square status before this turn was taken so the user can undo.
         //gameController.prevSquaresList = gameController.CopySquareStatus(gameController.squaresList, gameController.prevSquaresList);
+        // TODO Move this for loop to a function in the game controller
         for (int i = 0; i < gameController.squaresList.Length; i++)
         {
             gameController.prevSquaresList[i][0] = gameController.squaresList[i].player;
@@ -49,7 +50,7 @@ public class GameSquares : MonoBehaviour {
 
     public bool AddSlime(bool takeover=false)
     {
-        int current_player = gameController.GetPlayerSide();
+        int current_player = gameController.GetCurrentPlayer();
         if (player == 0 || takeover)
         {
             SetPlayer(current_player);
@@ -73,6 +74,7 @@ public class GameSquares : MonoBehaviour {
         this.player = player;
         // set the color of the text to be the player's color.
         //squareText.color = gameController.GetPlayerColor(player);
+        // TODO set the game peice animation rather than the button image
         Square.GetComponent<Image>().sprite = gameController.GetPlayerSlime(player);
     }
 
@@ -80,7 +82,7 @@ public class GameSquares : MonoBehaviour {
     public void SetSlime(int slime)
     {
         current_slime = slime;
-        // TODO this should be replaced with slime sprites rather than text
+        // TODO this should be replaced with slime sprite animation rather than text
         squareText.text = current_slime.ToString();
 
         if (current_slime == 0)
