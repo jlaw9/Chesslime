@@ -30,7 +30,7 @@ public class GameController: MonoBehaviour {
     public Sprite purpleSlime;
     public Sprite defaultButton;
 
-
+    // TODO create a game rules button so people can learn how to play!
     public GameObject gameOverPanel;
     public Text gameOverText;
     public GameObject resetButton;
@@ -61,7 +61,7 @@ public class GameController: MonoBehaviour {
         playerSlimeColor[4] = purpleSlime;
 
 
-        initializeBoard();
+        InitializeBoard();
         SelectOptions();
     }
 
@@ -157,7 +157,7 @@ public class GameController: MonoBehaviour {
     }
 
 
-    void initializeBoard()
+    void InitializeBoard()
     {
         // add the index of the square in the squaresList to the matrix
         int index = 0;
@@ -229,10 +229,10 @@ public class GameController: MonoBehaviour {
     {
         //Debug.Log("EndTurn is not implemented!");
         // check for explosions
-        while (checkExplosions())
+        while (CheckExplosions())
         {
             // check for a winner after each explosion
-            if (checkWin())
+            if (CheckWin())
             {
                 GameOver();
                 // if there was a winner, break out of the explosion loop
@@ -245,16 +245,15 @@ public class GameController: MonoBehaviour {
         
         NextPlayer();
         currentTurn++;
-
-
     }
 
 
     // checks the board to see if there are any explosions. If there are, it explodes the square.
     // returns true if at least one square exploded. Otherwise returns false
-    bool checkExplosions()
+    bool CheckExplosions()
     {
         bool explosion = false;
+        List<int> explodingSquares = new List<int>();
         for (int row = 0; row < rows; row++)
         {
             for (int col = 0; col < cols; col++)
@@ -264,11 +263,22 @@ public class GameController: MonoBehaviour {
                 {
                     // explode this square
                     explosion = true;
-                    ExplodeSquare(index);
+                    // This will allow the explosions to happen in stages.
+                    explodingSquares.Add(index);
                 }
             }
         }
+<<<<<<< HEAD
         //yield;
+=======
+        // Wait to actually explode the square until all of the checks have been made
+        // TODO add a coroutine so the explosions are delayed
+        foreach (int index in explodingSquares)
+        {
+            ExplodeSquare(index);
+            //Debug.Log("Exploding square: " + index);
+        }
+>>>>>>> origin/master
         return explosion;
     }
 
@@ -285,8 +295,9 @@ public class GameController: MonoBehaviour {
 
 
     //checks the board to see if player on is the only one left on the board or if player to is the only one left on the board.Breaks out of the loop if the player is found
-    bool checkWin()
+    bool CheckWin()
     {
+        bool hasWinner = false;
         HashSet<int> currentPlayers = new HashSet<int>();
         for (int i = 0; i < squaresList.Length; i++)
         {
@@ -314,10 +325,9 @@ public class GameController: MonoBehaviour {
         {
             //Debug.Log("Player " + currentPlayer.ToString() + " wins!");
             // only one player left, so we have a winner!
-            return true;
+            hasWinner = true;
         }
-        // No winner yet.
-        return false;
+        return hasWinner;
     }
 
 
@@ -389,7 +399,7 @@ public class GameController: MonoBehaviour {
     }
 
 
-    public int GetPlayerSide()
+    public int GetCurrentPlayer()
     {
         return currentPlayer;
     }
