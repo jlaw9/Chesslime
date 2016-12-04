@@ -268,17 +268,14 @@ public class GameController: MonoBehaviour {
                 }
             }
         }
-<<<<<<< HEAD
-        //yield;
-=======
         // Wait to actually explode the square until all of the checks have been made
         // TODO add a coroutine so the explosions are delayed
+        //yield;
         foreach (int index in explodingSquares)
         {
             ExplodeSquare(index);
             //Debug.Log("Exploding square: " + index);
         }
->>>>>>> origin/master
         return explosion;
     }
 
