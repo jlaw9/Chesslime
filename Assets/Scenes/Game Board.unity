@@ -552,74 +552,6 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 106962484}
---- !u!1 &117798913
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 4
-  m_Component:
-  - 224: {fileID: 117798914}
-  - 222: {fileID: 117798916}
-  - 114: {fileID: 117798915}
-  m_Layer: 5
-  m_Name: Panel
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &117798914
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 117798913}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_Children: []
-  m_Father: {fileID: 691754047}
-  m_RootOrder: 13
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &117798915
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 117798913}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -765806418, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0}
-  m_RaycastTarget: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
-      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
---- !u!222 &117798916
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 117798913}
 --- !u!1 &124871523
 GameObject:
   m_ObjectHideFlags: 0
@@ -3654,7 +3586,6 @@ RectTransform:
   - {fileID: 1939331556}
   - {fileID: 85888161}
   - {fileID: 678110511}
-  - {fileID: 117798914}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 0}
@@ -5545,13 +5476,11 @@ MonoBehaviour:
   - {fileID: 894776587}
   players: 
   prevPlayers: 
-  redSlime: {fileID: 1000010553852282, guid: 0ba5c5a603e3085409e2e3a3571dc443, type: 2}
-  blueSlime: {fileID: 1000010149935358, guid: 51210bc04abf1fe4ca0c537f4b6503ab, type: 2}
-  greenSlime: {fileID: 1000014118590878, guid: f1ad15ae710ddfe40976e0ceaa7f4182, type: 2}
-  purpleSlime: {fileID: 1000010885865348, guid: 416ec32dd4eb1e94a842c7c2557d96bf,
-    type: 2}
-  defaultButton: {fileID: 1000011062308688, guid: ccdbdfea199af4548935605ab5c97add,
-    type: 2}
+  redSlime: {fileID: 21300000, guid: 3fe9295fe417cd341b101a3b6732ae7e, type: 3}
+  blueSlime: {fileID: 21300000, guid: de051bcc1e392694f82136d18caa212d, type: 3}
+  greenSlime: {fileID: 21300000, guid: 1464674620a171444abcb8ac6664c275, type: 3}
+  purpleSlime: {fileID: 21300000, guid: ec1362e9869dcd842a1462c690109519, type: 3}
+  defaultButton: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
   gameOverPanel: {fileID: 1817847747}
   gameOverText: {fileID: 1732226768}
   resetButton: {fileID: 103573992}
