@@ -6,6 +6,7 @@ using System.Collections.Generic;
 public class GameSquares : MonoBehaviour {
 
     public GameObject Square;
+    private GameObject piece;
     public int player = 0; // What player owns this square, 0 for neither, 1 for player 1, and 2 for player 2.
     public int limit; //type of square/limit of pieces before it's set to explode
     public int current_slime = 0;  // amount of slime currently in this square
@@ -45,6 +46,7 @@ public class GameSquares : MonoBehaviour {
             // don't end the turn until the player makes a legal move.
             Debug.Log("Try again");
         }
+
     }
 
 
@@ -72,10 +74,22 @@ public class GameSquares : MonoBehaviour {
     public void SetPlayer(int player)
     {
         this.player = player;
+
+        foreach (Transform child in transform)
+        {
+           if(child.name != "Text")
+                GameObject.Destroy(child.gameObject);
+        }
+        //removes current piece if one currently exists
+
         // set the color of the text to be the player's color.
         //squareText.color = gameController.GetPlayerColor(player);
         // TODO set the game peice animation rather than the button image
-        Square.GetComponent<Image>().sprite = gameController.GetPlayerSlime(player);
+        //Square.GetComponent<Image>().sprite = gameController.GetPlayerSlime(player);
+
+        piece = gameController.GetPlayerSlime(player);
+        GameObject myPiece = (GameObject) Instantiate(piece, Square.transform.position, Quaternion.identity);
+        myPiece.transform.parent = Square.transform;
     }
 
 

@@ -23,12 +23,12 @@ public class GameController: MonoBehaviour {
     public List<int> prevPlayers;  // list of players
 
     Dictionary<int, Color32> playerColors = new Dictionary<int, Color32>();  // dictionary of colors for players
-    Dictionary<int, Sprite> playerSlimeColor = new Dictionary<int, Sprite>();  // dictionary of colors for players
-    public Sprite redSlime;
-    public Sprite blueSlime;
-    public Sprite greenSlime;
-    public Sprite purpleSlime;
-    public Sprite defaultButton;
+    Dictionary<int, GameObject> playerSlimeColor = new Dictionary<int, GameObject>();  // dictionary of colors for players
+    public GameObject redSlime;
+    public GameObject blueSlime;
+    public GameObject greenSlime;
+    public GameObject purpleSlime;
+    public GameObject defaultButton;
 
     // TODO create a game rules button so people can learn how to play!
     public GameObject gameOverPanel;
@@ -270,12 +270,13 @@ public class GameController: MonoBehaviour {
         }
         // Wait to actually explode the square until all of the checks have been made
         // TODO add a coroutine so the explosions are delayed
-        //yield;
+        // StartCoroutine(PauseFunction());
         foreach (int index in explodingSquares)
         {
             ExplodeSquare(index);
             //Debug.Log("Exploding square: " + index);
         }
+        
         return explosion;
     }
 
@@ -406,9 +407,15 @@ public class GameController: MonoBehaviour {
         return playerColors[player];
     }
 
-    public Sprite GetPlayerSlime(int player)
+    public GameObject GetPlayerSlime(int player)
     {
         return playerSlimeColor[player];
     }
 
+/*    IEnumerator PauseFunction()
+    {
+        Debug.Log("I'm pausing the game");
+        yield return new WaitForSeconds(1);
+    }
+*/
 }
