@@ -5480,7 +5480,8 @@ MonoBehaviour:
   greenSlime: {fileID: 1000010034038354, guid: a0788a68d3b5ec3489d92308c87e1dae, type: 2}
   purpleSlime: {fileID: 1000011838994064, guid: 678271ae910fac94189c4c6e6b9f2568,
     type: 2}
-  defaultButton: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  defaultButton: {fileID: 1000012225648208, guid: 862625958270f884db78d0f3fa396742,
+    type: 2}
   gameOverPanel: {fileID: 1817847747}
   gameOverText: {fileID: 1732226768}
   resetButton: {fileID: 103573992}
@@ -6450,6 +6451,11 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1314682664}
+--- !u!224 &1331895304 stripped
+RectTransform:
+  m_PrefabParentObject: {fileID: 224000012112486264, guid: 862625958270f884db78d0f3fa396742,
+    type: 2}
+  m_PrefabInternal: {fileID: 2083108720}
 --- !u!1001 &1357647986
 Prefab:
   m_ObjectHideFlags: 0
@@ -10886,7 +10892,7 @@ Transform:
   - {fileID: 523719963}
   - {fileID: 894776588}
   - {fileID: 1652758592}
-  - {fileID: 2083108721}
+  - {fileID: 1331895304}
   m_Father: {fileID: 691754047}
   m_RootOrder: 3
 --- !u!1001 &2018232243
@@ -11676,14 +11682,14 @@ Prefab:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 224000012112486264, guid: 862625958270f884db78d0f3fa396742,
+        type: 2}
+      propertyPath: m_RootOrder
+      value: 50
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 862625958270f884db78d0f3fa396742, type: 2}
   m_IsPrefabParent: 0
---- !u!224 &2083108721 stripped
-RectTransform:
-  m_PrefabParentObject: {fileID: 224000012605941400, guid: 862625958270f884db78d0f3fa396742,
-    type: 2}
-  m_PrefabInternal: {fileID: 2083108720}
 --- !u!1 &2140246537
 GameObject:
   m_ObjectHideFlags: 0
