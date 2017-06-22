@@ -13,7 +13,7 @@ TagManager:
   - UI
   - 
   - 
-  - 
+  - Slime
   - 
   - 
   - 
@@ -40,4 +40,16 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Background
+    uniqueID: 4109070505
+    locked: 0
+  - name: Boxes
+    uniqueID: 1012729653
+    locked: 0
+  - name: Slime
+    uniqueID: 1632716691
+    locked: 0
+  - name: Messages
+    uniqueID: 2415648947
     locked: 0
