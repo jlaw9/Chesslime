@@ -23,6 +23,7 @@ public class GameController: MonoBehaviour {
     public List<int> prevPlayers;  // list of players
 
     Dictionary<int, Color32> playerColors = new Dictionary<int, Color32>();  // dictionary of colors for players
+    Dictionary<int, String> playerColorsText = new Dictionary<int, String>();  // dictionary of colors names for players
     Dictionary<int, GameObject> playerSlimeColor = new Dictionary<int, GameObject>();  // dictionary of colors for players
     public GameObject redSlime;
     public GameObject blueSlime;
@@ -40,6 +41,8 @@ public class GameController: MonoBehaviour {
     public Dropdown selectPlayers;
     public GameObject gameBoardBackground;
     public GameObject undoButton;
+    public GameObject currentPlayerPanel;
+    public Text currentPlayerText;
 
 
     void Awake()
@@ -48,18 +51,30 @@ public class GameController: MonoBehaviour {
         prevSquaresList = new List<List<int>>();
         SetGameControllerReferenceOnButtons();
         playerColors[0] = new Color32(0, 0, 0, 150);
-        playerColors[1] = Color.red;
-        playerColors[2] = Color.blue;
-        playerColors[3] = Color.green;
-        playerColors[4] = Color.magenta;
+        playerColors[1] = new Color32(223, 60, 60, 255);
+        playerColorsText[1] = "Player 1";
+        playerColors[2] = new Color32(59, 173, 229, 255);
+        playerColorsText[2] = "Player 2";
+        playerColors[3] = new Color32(19, 199, 139, 255);
+        playerColorsText[3] = "Player 3";
+        playerColors[4] = new Color32(156, 67, 223, 255);
+        playerColorsText[4] = "Player 4";
         playerColors[5] = Color.cyan;
         playerColors[6] = Color.yellow;
+
         playerSlimeColor[0] = defaultButton;
         playerSlimeColor[1] = redSlime;
         playerSlimeColor[2] = blueSlime;
         playerSlimeColor[3] = greenSlime;
         playerSlimeColor[4] = purpleSlime;
 
+        // change the opacity of the slimes
+        //for (int i = 1; i < 5; i++)
+        //{
+        //    Color tmp = playerSlimeColor[i].GetComponent<SpriteRenderer>().color;
+        //    tmp.a = 0.6f;
+        //    playerSlimeColor[i].GetComponent<SpriteRenderer>().color = tmp;
+        //}
 
         InitializeBoard();
         SelectOptions();
@@ -89,6 +104,7 @@ public class GameController: MonoBehaviour {
 
         // set game over text to inactive
         gameOverPanel.SetActive(false);
+        currentPlayerPanel.SetActive(false);
         resetButton.SetActive(false);
         undoButton.SetActive(false);
         gameBoardBackground.SetActive(false);
@@ -109,6 +125,7 @@ public class GameController: MonoBehaviour {
         gameBoardBackground.SetActive(true);
         undoButton.SetActive(true);
         undoButton.GetComponent<Button>().interactable = false;
+        currentPlayerPanel.SetActive(true);
 
         // these should be selected by the user
         rows = int.Parse(selectRows.captionText.text);
@@ -127,6 +144,10 @@ public class GameController: MonoBehaviour {
 
         currentPlayer = 1;
         currentTurn = 1;
+        // set the message to be the current player's turn
+        currentPlayerText.text = playerColorsText[currentPlayer] + "'s Turn";
+        // also set the color
+        currentPlayerText.color = playerColors[currentPlayer];
     }
 
 
@@ -333,11 +354,13 @@ public class GameController: MonoBehaviour {
     {
         gameOverPanel.SetActive(true);
         // the player who took the last turn won
-        gameOverText.text = "Player " + currentPlayer.ToString() + " Wins!";
+        gameOverText.text = playerColorsText[currentPlayer] + " Wins!";
+        gameOverText.color = playerColors[currentPlayer];
         SetBoardInteractable(toggle: false);
         // give the option to play again
         resetButton.SetActive(true);
         undoButton.SetActive(false);
+        currentPlayerPanel.SetActive(false);
     }
 
 
@@ -383,7 +406,7 @@ public class GameController: MonoBehaviour {
                 squaresList[i].SetSlime(prevSquaresList[i][1]);
             }
         }
-        currentPlayer = prevPlayer;
+        SetCurrentPlayer(prevPlayer);
         players = new List<int>(prevPlayers);
         currentTurn--;
     }
@@ -393,7 +416,16 @@ public class GameController: MonoBehaviour {
     {
         int curr_player_index = players.IndexOf(currentPlayer);
         int next_player_index = (curr_player_index + 1) % players.Count;
-        currentPlayer = players[next_player_index];
+        SetCurrentPlayer(players[next_player_index]);
+    }
+
+    public void SetCurrentPlayer(int player)
+    {
+        this.currentPlayer = player;
+        // set the message to be the current player's turn
+        currentPlayerText.text = playerColorsText[currentPlayer] + "'s Turn";
+        // also set the color
+        currentPlayerText.color = playerColors[currentPlayer];
     }
 
 
