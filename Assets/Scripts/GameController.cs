@@ -21,6 +21,9 @@ public class GameController: MonoBehaviour {
     int cols;  // number of columns specified by the user
     public List<int> players;  // list of players
     public List<int> prevPlayers;  // list of players
+    public List<float> origXCoord;  // original x coordinate of squares
+
+    bool exploding = false;  // boolean to stop time momentarilly when exploding
 
     Dictionary<int, Color32> playerColors = new Dictionary<int, Color32>();  // dictionary of colors for players
     Dictionary<int, String> playerColorsText = new Dictionary<int, String>();  // dictionary of colors names for players
@@ -49,6 +52,7 @@ public class GameController: MonoBehaviour {
     {
         squaresMatrix = new int[masterRows, masterCols];
         prevSquaresList = new List<List<int>>();
+        origXCoord = new List<float>();
         SetGameControllerReferenceOnButtons();
         playerColors[0] = new Color32(0, 0, 0, 150);
         playerColors[1] = new Color32(223, 60, 60, 255);
@@ -196,14 +200,13 @@ public class GameController: MonoBehaviour {
     // Initializes the squares with their neighbors and limit
     void BuildBoard(int rows, int cols)
     {
-        SetBoardBackground(rows, cols);
         int index;
         // add the limit and neighbors to each square
         for (int row = 0; row < rows; row++)
         {
             for (int col = 0; col < cols; col++)
             {
-                Debug.Log("Adding " + row + "," + col);
+                //Debug.Log("Adding " + row + "," + col);
                 index = squaresMatrix[row, col];
                 squaresList[index].gameObject.SetActive(true);
                 //Debug.Log("Testing index: " + index.ToString() + ", row: " + row.ToString() + ", col: " + col.ToString());
@@ -216,42 +219,77 @@ public class GameController: MonoBehaviour {
                     squaresList[index].neighbors.Add(squaresMatrix[row + 1, col]);  // add the left neighbor
                 }
                 if (col - 1 >= 0)
-                { 
+                {
                     squaresList[index].neighbors.Add(squaresMatrix[row, col - 1]);  // add the left neighbor
                 }
                 if (col + 1 < cols)
                 {
                     squaresList[index].neighbors.Add(squaresMatrix[row, col + 1]);  // add the left neighbor
                 }
-                    // set the limit of the square equal to the number of neighbors
+                // set the limit of the square equal to the number of neighbors
                 squaresList[index].limit = squaresList[index].neighbors.Count;
             }
         }
-        /* 
-        // inactivate any unused squares
-        // check by rows and then by columns. If the user selects the same number of rows as the master, then the first for loop won't start.
-        for (int row = 0; row < masterRows; row++)
+
+
+        // if this is the first game, then get the original x coordinates
+        if (origXCoord.Count == 0)
         {
-            for (int col = 0; col < masterCols; col++)
+            // the original has 7 columns total
+            for (int i = 0; i < 7; i++)
             {
-                if (row >= rows || col >= cols)
-                {
-                    Debug.Log("Inactivating " + row + "," + col);
-                    squaresList[squaresMatrix[row, col]].gameObject.SetActive(false);
-                }
+                origXCoord.Add(squaresList[i].transform.position.x);
             }
         }
-        */
+        //origXCoord.Add(squaresList[squaresMatrix[0, col]].transform.position.x);
+
+        // Move the board to the center
+        // set the coordinates
+        // middle x coord of the squares 
+        float middleXCoord = 0;
+        for (int col = 0; col < cols; col++)
+        {
+            middleXCoord += origXCoord[col];
+        }
+        // divide by the number of columns to get the average x coordinate
+        middleXCoord = middleXCoord / cols;
+        for (int row = 0; row < rows; row++)
+        {
+            for (int col = 0; col < cols; col++)
+            {
+                // move it to the center of the camera (x coordinate of 0)
+                float transformX = origXCoord[col] - middleXCoord;
+                float y = squaresList[squaresMatrix[row, col]].transform.position.y;
+                squaresList[squaresMatrix[row, col]].transform.position = new Vector3(transformX, y, gameBoardBackground.transform.position.z);
+            }
+        }
+        // now set the board background behind the board
+        SetBoardBackground(rows, cols);
     }
 
 
-    // check if there is a winner and move to the next player's turn.
-    public void EndTurn()
+    // check if there is a winner or move to the next player's turn.
+    public IEnumerator EndTurn()
     {
-        //Debug.Log("EndTurn is not implemented!");
+        // set the board to inactive so that no one can place slime while the game is waiting
+        SetBoardInteractable(toggle: false);
         // check for explosions
-        while (CheckExplosions())
+        while (true)
         {
+            List<int> explodingSquares = GetExplodingSquares();
+            // if there are no squares to explode, then break out of this while loop
+            if (explodingSquares.Count == 0)
+                break;
+
+            // now actually explode the squares
+            foreach (int index in explodingSquares)
+                ExplodeSquare(index);
+
+            // if there are squares to explode, then wait for 1 second(s) between each explosion to give a better effect
+            //Debug.Log("I'm pausing the game");
+            //Debug.Log("Done pausing the game");
+            yield return new WaitForSeconds(0.75f);
+
             // check for a winner after each explosion
             if (CheckWin())
             {
@@ -260,6 +298,10 @@ public class GameController: MonoBehaviour {
                 break;
             }
         }
+
+        //reactivate the board after all explosions are done
+        SetBoardInteractable(toggle: true);
+
         prevPlayer = currentPlayer;
         // also activate the undo button
         undoButton.GetComponent<Button>().interactable = true;
@@ -271,9 +313,9 @@ public class GameController: MonoBehaviour {
 
     // checks the board to see if there are any explosions. If there are, it explodes the square.
     // returns true if at least one square exploded. Otherwise returns false
-    bool CheckExplosions()
+    List<int> GetExplodingSquares()
     {
-        bool explosion = false;
+        //bool explosion = false;
         List<int> explodingSquares = new List<int>();
         for (int row = 0; row < rows; row++)
         {
@@ -283,32 +325,27 @@ public class GameController: MonoBehaviour {
                 if (squaresList[index].current_slime >= squaresList[index].limit)
                 {
                     // explode this square
-                    explosion = true;
+                    //explosion = true;
                     // This will allow the explosions to happen in stages.
                     explodingSquares.Add(index);
                 }
             }
         }
-        // Wait to actually explode the square until all of the checks have been made
-        // TODO add a coroutine so the explosions are delayed
-        // StartCoroutine(PauseFunction());
-        foreach (int index in explodingSquares)
-        {
-            ExplodeSquare(index);
-            //Debug.Log("Exploding square: " + index);
-        }
-        
-        return explosion;
+
+        return explodingSquares;
     }
 
 
     // set slime of square to 0, and take over and add slime to the square's neighbors
     void ExplodeSquare(int squareIndex)
     {
+        // set the slime in the current square to 0 (empty)
         squaresList[squareIndex].SetSlime(0);
+        // add 1 to all of the neighbors of the exploding square
         foreach (int neighbor in squaresList[squareIndex].neighbors)
         {
-            squaresList[neighbor].AddSlime(takeover:true);
+            // No need to check if the square is owned. It will be taken over 
+            squaresList[neighbor].AddSlime();
         }
     }
 
@@ -444,10 +481,29 @@ public class GameController: MonoBehaviour {
         return playerSlimeColor[player];
     }
 
-/*    IEnumerator PauseFunction()
+/*
+    IEnumerator PauseFunction()
     {
+        // set exploding back to false to resume game after this function
+        exploding = false;
         Debug.Log("I'm pausing the game");
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(2);
+        Debug.Log("Done pausing the game");
+    }
+
+    void Update()
+    {
+        if (exploding == true)
+        {
+            StartCoroutine(PauseFunction());
+            Debug.Log("Game Paused");
+        }
+        if (exploding)
+        {
+            // wait here
+            Debug.Log("waiting");
+        }
     }
 */
+
 }

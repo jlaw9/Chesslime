@@ -27,49 +27,54 @@ public class GameSquares : MonoBehaviour {
 
     public void TakeTurn()
     {
-        // get the game square status before this turn was taken so the user can undo.
-        //gameController.prevSquaresList = gameController.CopySquareStatus(gameController.squaresList, gameController.prevSquaresList);
-        // TODO Move this for loop to a function in the game controller
-        for (int i = 0; i < gameController.squaresList.Length; i++)
-        {
-            gameController.prevSquaresList[i][0] = gameController.squaresList[i].player;
-            gameController.prevSquaresList[i][1] = gameController.squaresList[i].current_slime;
-        }
-        // get the current list of players
-        gameController.prevPlayers = new List<int>(gameController.players);
-
-        bool added = AddSlime(takeover:false);
-        if (added)
-        {
-            gameController.EndTurn();
-        }
-        else
+        // check to see if the square clicked is owned by another player
+        bool owned = CheckSquareOwnedByOtherPlayer();
+        if (owned)
         {
             // don't end the turn until the player makes a legal move.
             Debug.Log("Try again");
         }
+        else
+        {
+            // setup the undo button
+            // get the game square status before this turn was taken so the user can undo.
+            //gameController.prevSquaresList = gameController.CopySquareStatus(gameController.squaresList, gameController.prevSquaresList);
+            // TODO Move this for loop to a function in the game controller
+            for (int i = 0; i < gameController.squaresList.Length; i++)
+            {
+                gameController.prevSquaresList[i][0] = gameController.squaresList[i].player;
+                gameController.prevSquaresList[i][1] = gameController.squaresList[i].current_slime;
+            }
+            // get the current list of players
+            gameController.prevPlayers = new List<int>(gameController.players);
+
+            // Add slime to this square 
+            AddSlime();
+
+            // End Turn performs the explosions, then checks for a winner
+            // start a coroutine here to allow for explosions to be staggered
+            StartCoroutine(gameController.EndTurn());
+        }
 
     }
 
-
-    public bool AddSlime(bool takeover=false)
+    public bool CheckSquareOwnedByOtherPlayer()
     {
         int current_player = gameController.GetCurrentPlayer();
-        if (player == 0 || takeover)
-        {
-            SetPlayer(current_player);
-        }
-        if (current_player != this.player)
-        {
-            // illegal move
-            Debug.Log("square owned by: " + this.player);
-            return false;
-        }
-        else
-        {
-            SetSlime(current_slime + 1);
+        // If this square is owned by another player, then don't allow adding slime to it
+        if (this.player != 0 && current_player != this.player)
             return true;
-        }
+        // otherwise it's not owned and we can add slime to it!
+        return false;
+    }
+
+
+    public void AddSlime()
+    {
+        int current_player = gameController.GetCurrentPlayer();
+
+        SetPlayer(current_player);
+        SetSlime(current_slime + 1);
     }
 
 
