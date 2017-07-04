@@ -120,6 +120,12 @@ public class GameSquares : MonoBehaviour {
         {
             float scale = 0;
             // set the size of the slime to the amount of space left until it explodes
+            if (this.current_slime == this.limit)
+            {
+                // leave the slime as the largest it can be
+                //myPiece.GetComponent<SpriteRenderer>().size = new Vector2(40, 40);
+                scale = 1.33f;
+            }
             if (this.current_slime == this.limit - 1)
             {
                 // leave the slime as the largest it can be

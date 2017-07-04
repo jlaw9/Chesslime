@@ -281,14 +281,12 @@ public class GameController: MonoBehaviour {
             if (explodingSquares.Count == 0)
                 break;
 
+            // if there are squares to explode, then wait for 1 second(s) between each explosion to give a better effect
+            yield return new WaitForSeconds(0.5f);
+
             // now actually explode the squares
             foreach (int index in explodingSquares)
                 ExplodeSquare(index);
-
-            // if there are squares to explode, then wait for 1 second(s) between each explosion to give a better effect
-            //Debug.Log("I'm pausing the game");
-            //Debug.Log("Done pausing the game");
-            yield return new WaitForSeconds(0.75f);
 
             // check for a winner after each explosion
             if (CheckWin())

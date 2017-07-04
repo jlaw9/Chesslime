@@ -3765,8 +3765,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
-  - {fileID: 801524523}
   - {fileID: 1094805678}
+  - {fileID: 801524523}
   - {fileID: 2016981375}
   - {fileID: 734815934}
   - {fileID: 1905523776}
@@ -4178,7 +4178,7 @@ GameObject:
   - component: {fileID: 801524523}
   - component: {fileID: 801524525}
   - component: {fileID: 801524524}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Game Board Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4196,7 +4196,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 691754047}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -5599,7 +5599,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 691754047}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1094805679
 MonoBehaviour:
