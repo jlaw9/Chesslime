@@ -9,6 +9,7 @@ public class GameSquares : MonoBehaviour {
     private GameObject piece;
     private GameObject slimeSprite;
     private Vector3 orig_scale;  // original scale of the slime object. Is not 1,1,1 like expected, but something like 2.2, 2.2, 20. Keep track of it here to change the scale relative to the original
+    public int index { get; set; } // The index of this square in the GameController
     public int player = 0; // What player owns this square, 0 for neither, 1 for player 1, and 2 for player 2.
     public int limit; //type of square/limit of pieces before it's set to explode
     public int current_slime = 0;  // amount of slime currently in this square
@@ -17,6 +18,7 @@ public class GameSquares : MonoBehaviour {
     //int squarePos; //where the square is in the board array.
     public List<int> neighbors;  // the neighboring squares of this square
     private GameController gameController;
+    private MatchController matchController;
 
 
     public void SetGameControllerReference(GameController controller)
@@ -24,10 +26,21 @@ public class GameSquares : MonoBehaviour {
         gameController = controller;
     }
 
-
-    public void TakeTurn()
+    public void SetMatchControllerReference(MatchController controller)
     {
-        // check to see if the square clicked is owned by another player
+        matchController = controller;
+    }
+
+    public void ClickSquare()
+    {
+        // TODO If it is not this player's turn, don't do anything
+        if (gameController.GetCurrentPlayer() != matchController.localPlayer.player_id)
+        {
+            Debug.Log("Player " + matchController.localPlayer.player_id + ", it's Player " + gameController.GetCurrentPlayer() + "'s turn");
+            return;
+        }
+
+        // If this square is owned by another player, don't do anything.
         bool owned = CheckSquareOwnedByOtherPlayer();
         if (owned)
         {
@@ -36,26 +49,32 @@ public class GameSquares : MonoBehaviour {
         }
         else
         {
-            // setup the undo button
-            // get the game square status before this turn was taken so the user can undo.
-            //gameController.prevSquaresList = gameController.CopySquareStatus(gameController.squaresList, gameController.prevSquaresList);
-            // TODO Move this for loop to a function in the game controller
-            for (int i = 0; i < gameController.squaresList.Length; i++)
-            {
-                gameController.prevSquaresList[i][0] = gameController.squaresList[i].player;
-                gameController.prevSquaresList[i][1] = gameController.squaresList[i].current_slime;
-            }
-            // get the current list of players
-            gameController.prevPlayers = new List<int>(gameController.players);
-
-            // Add slime to this square 
-            AddSlime();
-
-            // End Turn performs the explosions, then checks for a winner
-            // start a coroutine here to allow for explosions to be staggered
-            StartCoroutine(gameController.EndTurn());
+            // MatchController will signal to the PlayerController that a turn is being made
+            matchController.localPlayer.CmdMarkSquare(this.index);
         }
+    }
 
+
+    public void TakeTurn()
+    {   
+        // setup the undo button
+        // get the game square status before this turn was taken so the user can undo.
+        //gameController.prevSquaresList = gameController.CopySquareStatus(gameController.squaresList, gameController.prevSquaresList);
+        // TODO Move this for loop to a function in the game controller
+        for (int i = 0; i < gameController.squaresList.Length; i++)
+        {
+            gameController.prevSquaresList[i][0] = gameController.squaresList[i].player;
+            gameController.prevSquaresList[i][1] = gameController.squaresList[i].current_slime;
+        }
+        // get the current list of players
+        gameController.prevPlayers = new List<int>(gameController.players);
+
+        // Add slime to this square 
+        AddSlime();
+
+        // End Turn performs the explosions, then checks for a winner
+        // start a coroutine here to allow for explosions to be staggered
+        StartCoroutine(gameController.EndTurn());
     }
 
     public bool CheckSquareOwnedByOtherPlayer()
