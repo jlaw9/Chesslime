@@ -6,6 +6,7 @@ using System;
 
 public class GameController: MonoBehaviour {
 
+    public MatchController matchController;
     int masterRows = 7;  // number of rows in the master matrix
     int masterCols = 7;  // number of columns in the master matrix
     int totalSquare;
@@ -81,7 +82,9 @@ public class GameController: MonoBehaviour {
         //}
 
         InitializeBoard();
-        SelectOptions();
+        //SelectOptions();
+        // wait for players to connect first.
+        WaitForPlayers();
     }
 
 
@@ -90,13 +93,40 @@ public class GameController: MonoBehaviour {
     {
         for (int i = 0; i < squaresList.Length; i++)
         {
+            squaresList[i].index = i;
             squaresList[i].SetGameControllerReference(this);
+            squaresList[i].SetMatchControllerReference(matchController);
             prevSquaresList.Add(new List<int>());
             prevSquaresList[i].Add(0);
             prevSquaresList[i].Add(0);
         }
     }
 
+
+    public void WaitForPlayers()
+    {
+        // Set selection options to true
+        selectRows.gameObject.SetActive(false);
+        selectCols.gameObject.SetActive(false);
+        selectPlayers.gameObject.SetActive(false);
+        startGame.SetActive(false);
+
+        // set game over text to inactive
+        currentPlayerPanel.SetActive(false);
+        resetButton.SetActive(false);
+        undoButton.SetActive(false);
+        gameBoardBackground.SetActive(false);
+        for (int i = 0; i < squaresList.Length; i++)
+        {
+            squaresList[i].gameObject.SetActive(false);
+            squaresList[i].neighbors = new List<int>();
+        }
+
+        // Set the text
+        gameOverPanel.SetActive(true);
+        gameOverText.text = "Waiting for players";
+        gameOverText.fontSize = 32;
+    }
 
     public void SelectOptions()
     {
@@ -119,6 +149,11 @@ public class GameController: MonoBehaviour {
         }
     }
 
+    public void StartGameButton()
+    {
+        matchController.localPlayer.CmdStartGame();
+    }
+
 
     public void StartGame()
     {
@@ -126,6 +161,7 @@ public class GameController: MonoBehaviour {
         selectCols.gameObject.SetActive(false);
         selectPlayers.gameObject.SetActive(false);
         startGame.SetActive(false);
+        gameOverPanel.SetActive(false);
         gameBoardBackground.SetActive(true);
         undoButton.SetActive(true);
         undoButton.GetComponent<Button>().interactable = false;
@@ -148,10 +184,7 @@ public class GameController: MonoBehaviour {
 
         currentPlayer = 1;
         currentTurn = 1;
-        // set the message to be the current player's turn
-        currentPlayerText.text = playerColorsText[currentPlayer] + "'s Turn";
-        // also set the color
-        currentPlayerText.color = playerColors[currentPlayer];
+        SetCurrentPlayer(currentPlayer);
     }
 
 
@@ -390,6 +423,7 @@ public class GameController: MonoBehaviour {
         gameOverPanel.SetActive(true);
         // the player who took the last turn won
         gameOverText.text = playerColorsText[currentPlayer] + " Wins!";
+        gameOverText.fontSize = 64;
         gameOverText.color = playerColors[currentPlayer];
         SetBoardInteractable(toggle: false);
         // give the option to play again
@@ -401,6 +435,10 @@ public class GameController: MonoBehaviour {
 
     public void SetBoardInteractable(bool toggle=false)
     {
+        if (toggle==false)
+        {
+            Debug.Log("Disabling Buttons");
+        }
         for (int row = 0; row < rows; row++)
         {
             for (int col = 0; col < cols; col++)
@@ -410,6 +448,10 @@ public class GameController: MonoBehaviour {
         }
     }
 
+    public void RestartGameButton()
+    {
+        matchController.localPlayer.CmdRestartGame();
+    }
 
     public void RestartGame()
     {
@@ -423,6 +465,11 @@ public class GameController: MonoBehaviour {
             }
         }
         SelectOptions();
+    }
+
+
+    public void UndoButton() {
+        matchController.localPlayer.CmdUndo();
     }
 
     public void Undo()
@@ -458,11 +505,18 @@ public class GameController: MonoBehaviour {
     {
         this.currentPlayer = player;
         // set the message to be the current player's turn
-        currentPlayerText.text = playerColorsText[currentPlayer] + "'s Turn";
+        // If the current player is the local player, set it to be "Your turn"
+        if (currentPlayer == matchController.localPlayer.player_id)
+        {
+            currentPlayerText.text = "Your Turn";
+        }
+        else
+        {
+            currentPlayerText.text = playerColorsText[currentPlayer] + "'s Turn";
+        }
         // also set the color
         currentPlayerText.color = playerColors[currentPlayer];
     }
-
 
     public int GetCurrentPlayer()
     {
